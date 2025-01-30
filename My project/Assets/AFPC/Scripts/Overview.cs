@@ -8,6 +8,7 @@ namespace AFPC {
     [System.Serializable]
     public class Overview {
 
+        public Movement movement;
         public bool isDebugLog;
 
         [Header("Inputs")]
@@ -178,8 +179,8 @@ namespace AFPC {
         /// </summary>
         /// <param name="value"></param>
         public virtual void Shake (float value) {
-            shakingAmount = value;
-            if (isDebugLog) Debug.Log (camera.gameObject.name + ": Shake camera with: " + value + " value.");
+            shakingAmount = value-0.25f;
+            if (isDebugLog) Debug.Log (camera.gameObject.name + ": Shake camera with: " + shakingAmount + " value.");
         }
 
         private Vector3 AddRandromSphereVector (Vector3 position, float amount) {

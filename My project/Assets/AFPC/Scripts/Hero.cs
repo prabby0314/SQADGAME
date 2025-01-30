@@ -60,6 +60,9 @@ public class Hero : MonoBehaviour {
 
         /* Control the speed */
         movement.Running();
+        
+        /* If player idle faster endurance regen*/
+        movement.Idle();
 
         /* Control the jumping, ground search... */
         movement.Jumping();

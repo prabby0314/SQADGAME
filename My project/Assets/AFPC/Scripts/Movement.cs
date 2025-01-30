@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Threading;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace AFPC {
@@ -20,7 +22,7 @@ namespace AFPC {
 
         [Header("Acceleration")]
         public float referenceAcceleration = 2.66f;
-        private float currentAcceleration = 2.5f;
+        public float currentAcceleration = 2.5f;
         private float movementSmoothing = 0.3f;
         private Vector3 vector3_Reference;
         private Vector3 vector3_Target;
@@ -31,6 +33,8 @@ namespace AFPC {
         [Header("Running")]
         public float runningAcceleration = 4.5f;
         private bool isRunningAvaiable = true;
+
+        private bool isRunning = false;
 
         [Header("Endurance")]
         public float referenceEndurance = 20.0f;
@@ -43,6 +47,7 @@ namespace AFPC {
         private Vector3 groungCheckPosition;
         private bool isLandingActionPerformed;
         private UnityAction landingAction;
+        private bool isJumping = false;
 	
         [Header("Physics")]
         public bool isGeneratePhysicMaterial = true;
@@ -60,6 +65,11 @@ namespace AFPC {
 
         private float epsilon = 0.01f;
 
+        [Header("Idle")]
+
+        private float idleTimeOut = 2.0f;
+        private float idleTime = 0f;
+
         /// <summary>
         /// Initialize the movement. Generate physic material if needed. Prepare the rigidbody.
         /// </summary>
@@ -72,7 +82,7 @@ namespace AFPC {
                 PhysicMaterial physicMaterial = new PhysicMaterial {
                     name = "Generated Material",
                     bounciness = 0.01f,
-                    dynamicFriction = 0.0f,
+                    dynamicFriction = 0.5f,
                     staticFriction = 0.0f,
                     frictionCombine = PhysicMaterialCombine.Minimum,
                     bounceCombine = PhysicMaterialCombine.Minimum
@@ -210,12 +220,27 @@ namespace AFPC {
 	    public virtual void Jumping () {
 		    if (!isJumpingAvailable) return;
 		    if (isGrounded) {
-			    if (jumpingInputValue) {
+                isJumping = false;
+			    if (jumpingInputValue && endurance > 0.1f ) {
                     rb.velocity = new Vector3 (rb.velocity.x, jumpForce, rb.velocity.z);
+                    isJumping = true;
+                    endurance -= 0.4f;
+                }
+              }
+              else {
+                if(!isGrounded && !isJumping && !isRunning)
+                {
+                    endurance -= Time.deltaTime * 1.25f;
+                }
+                else
+                {
+                    endurance -= Time.deltaTime * 1.5f;
+                }
+			    if (System.Math.Abs(endurance - referenceEndurance) > epsilon) {
+                    endurance = Mathf.MoveTowards (endurance, referenceEndurance, Time.deltaTime/2);
                 }
 		    }
-	    }
-        
+        }
         /// <summary>
         /// Running state. Better use it in Update.
         /// </summary>
@@ -223,18 +248,33 @@ namespace AFPC {
 		    if (!isRunningAvaiable) return;
 		    if (!isGrounded) return;
 		    if (runningInputValue && endurance > 0.05f) {
+                isRunning = true;
                 releaseAcceleration = false;
 			    endurance -= Time.deltaTime * 2;
-			    currentAcceleration = Mathf.MoveTowards (currentAcceleration, runningAcceleration, Time.deltaTime * 10);
+			    currentAcceleration = Mathf.MoveTowards (currentAcceleration, runningAcceleration, Time.deltaTime * 5);
 		    }
 		    else {
+                isRunning = false;
                 releaseAcceleration = true;
 			    if (System.Math.Abs(endurance - referenceEndurance) > epsilon) {
-                    endurance = Mathf.MoveTowards (endurance, referenceEndurance, Time.deltaTime);
+                    endurance = Mathf.MoveTowards (endurance, referenceEndurance, Time.deltaTime/1.1f);
                 }
 		    }
 	    }
 
+        public virtual void Idle()
+        {
+            if (!(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || 
+            Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)))
+            {
+                idleTime+=Time.deltaTime;
+                if(idleTime>= idleTimeOut)
+                {
+                    endurance = Mathf.MoveTowards (endurance, referenceEndurance, Time.deltaTime*1.5f);
+                }
+            }
+            idleTime = 0f;
+        }
         private void LookingForGround () {
             groungCheckPosition = new Vector3 (cc.transform.position.x, cc.transform.position.y - height / 2, cc.transform.position.z);
             if (Physics.CheckSphere (groungCheckPosition, 0.1f, groundMask, QueryTriggerInteraction.Ignore)) {
