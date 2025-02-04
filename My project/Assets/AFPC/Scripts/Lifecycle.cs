@@ -8,7 +8,7 @@ namespace AFPC {
     /// </summary>
     [System.Serializable]
     public class Lifecycle {
-
+        public Movement movement;
         public bool isDebugLog;
 
         public string ID = "AFPC";
@@ -182,9 +182,11 @@ namespace AFPC {
 				    health += 1;
 				    CheckFrenzy ();
 			    }
-			    else {
-				    health = referenceShield;
-			    }
+				if(movement.isIdle() == true)
+                {
+                    health +=2;
+                    CheckFrenzy ();
+                }
 		    }
 	    }
 

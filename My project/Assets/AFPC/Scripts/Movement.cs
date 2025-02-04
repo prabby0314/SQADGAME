@@ -224,7 +224,7 @@ namespace AFPC {
 			    if (jumpingInputValue && endurance > 0.1f ) {
                     rb.velocity = new Vector3 (rb.velocity.x, jumpForce, rb.velocity.z);
                     isJumping = true;
-                    endurance -= 0.4f;
+                    endurance -= 0.2f;
                 }
               }
               else {
@@ -268,12 +268,25 @@ namespace AFPC {
             Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)))
             {
                 idleTime+=Time.deltaTime;
-                if(idleTime>= idleTimeOut)
+                if(idleTime >= idleTimeOut)
                 {
-                    endurance = Mathf.MoveTowards (endurance, referenceEndurance, Time.deltaTime*1.5f);
+                    endurance = Mathf.MoveTowards (endurance, referenceEndurance, Time.deltaTime*2f);
                 }
+                
             }
-            idleTime = 0f;
+            else
+            {
+                idleTime = 0f;
+            }
+        }
+        public bool isIdle()
+        {
+            if (!(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || 
+            Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)))
+            {
+                return true;
+            }
+            return false;
         }
         private void LookingForGround () {
             groungCheckPosition = new Vector3 (cc.transform.position.x, cc.transform.position.y - height / 2, cc.transform.position.z);
