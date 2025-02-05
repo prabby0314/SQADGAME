@@ -1,6 +1,8 @@
-# Unity scenes and prefabs
+# Unity-sepecific file types/scenes and prefabs
 *.unity filter=lfs diff=lfs merge=lfs
 *.prefab filter=lfs diff=lfs merge=lfs
+*.mat filter=lfs diff=lfs merge=lfs
+*.meta filter=lfs diff=lfs merge=lfs
 
 # Textures and materials
 *.psd filter=lfs diff=lfs merge=lfs
