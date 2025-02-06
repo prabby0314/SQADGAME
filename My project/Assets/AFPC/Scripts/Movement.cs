@@ -14,6 +14,8 @@ namespace AFPC {
     public class Movement {
 
         public bool isDebugLog;
+        public GameObject plr;
+        public LayerMask layerMask;
 
         [Header("Inputs")]
         public Vector3 movementInputValues;
@@ -69,6 +71,17 @@ namespace AFPC {
 
         private float idleTimeOut = 2.0f;
         private float idleTime = 0f;
+
+        [Header("ray")]
+
+        private float radius = 0.5f;
+        private float numRays = 35f;
+        private float verticalOffset = 0f;
+        private float angle;
+        private Vector3 dir;
+        private Vector3 origin;
+        private Vector3 horizontalDir;
+        private float heightRay = 5f;
 
         /// <summary>
         /// Initialize the movement. Generate physic material if needed. Prepare the rigidbody.
@@ -219,12 +232,11 @@ namespace AFPC {
         /// </summary>
 	    public virtual void Jumping () {
 		    if (!isJumpingAvailable) return;
-		    if (isGrounded) {
+		    if (isGrounded || Ray() != "") {
                 isJumping = false;
 			    if (jumpingInputValue && endurance > 0.1f ) {
                     rb.velocity = new Vector3 (rb.velocity.x, jumpForce, rb.velocity.z);
                     isJumping = true;
-                    endurance -= 0.2f;
                 }
               }
               else {
@@ -262,6 +274,28 @@ namespace AFPC {
 		    }
 	    }
 
+        
+        public virtual string Ray()
+        {
+            origin = new Vector3(plr.transform.position.x,plr.transform.position.y+verticalOffset,plr.transform.position.z);
+            for(int i = 0; i < numRays; ++i)
+            {
+                angle = i * MathF.PI*2f /numRays;
+                horizontalDir = new Vector3(Mathf.Cos(angle),0,Mathf.Sin(angle));
+                for(float y = -heightRay/2f; y <= heightRay / 2; y += heightRay/numRays)
+                {
+                    dir = new Vector3(horizontalDir.x,y+verticalOffset,horizontalDir.z).normalized;
+                    RaycastHit hit;
+                    if(Physics.Raycast(origin,dir, out hit, radius, layerMask))
+                    {
+                        return hit.collider.name;
+                    }
+
+                    Debug.DrawRay(origin,dir*radius,Color.red);
+                }
+            }
+            return "";
+        }
         public virtual void Idle()
         {
             if (!(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || 

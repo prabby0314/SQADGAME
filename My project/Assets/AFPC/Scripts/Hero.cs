@@ -67,6 +67,8 @@ public class Hero : MonoBehaviour {
         /* Control the jumping, ground search... */
         movement.Jumping();
 
+        Debug.Log(movement.Ray());
+
         /* Control the health and shield recovery */
         lifecycle.Runtime();
     }
