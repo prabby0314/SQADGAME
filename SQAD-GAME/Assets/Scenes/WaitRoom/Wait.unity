@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 166869786}
   - component: {fileID: 166869787}
   m_Layer: 5
-  m_Name: Health Shield Endurance
+  m_Name: Health Endurance
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -436,6 +436,26 @@ PrefabInstance:
       objectReference: {fileID: 963194227}
     - target: {fileID: 1807461413602009156, guid: dec06b7a15916437297e6e8968a07e4f,
         type: 3}
+      propertyPath: overview.movement.cc
+      value: 
+      objectReference: {fileID: 1831683901}
+    - target: {fileID: 1807461413602009156, guid: dec06b7a15916437297e6e8968a07e4f,
+        type: 3}
+      propertyPath: overview.movement.rb
+      value: 
+      objectReference: {fileID: 1831683902}
+    - target: {fileID: 1807461413602009156, guid: dec06b7a15916437297e6e8968a07e4f,
+        type: 3}
+      propertyPath: lifecycle.movement.cc
+      value: 
+      objectReference: {fileID: 1831683901}
+    - target: {fileID: 1807461413602009156, guid: dec06b7a15916437297e6e8968a07e4f,
+        type: 3}
+      propertyPath: lifecycle.movement.rb
+      value: 
+      objectReference: {fileID: 1831683902}
+    - target: {fileID: 1807461413602009156, guid: dec06b7a15916437297e6e8968a07e4f,
+        type: 3}
       propertyPath: overview.movement.plr
       value: 
       objectReference: {fileID: 1831683900}
@@ -446,6 +466,11 @@ PrefabInstance:
       objectReference: {fileID: 1831683900}
     - target: {fileID: 1807461413602009156, guid: dec06b7a15916437297e6e8968a07e4f,
         type: 3}
+      propertyPath: movement.layerMask.m_Bits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1807461413602009156, guid: dec06b7a15916437297e6e8968a07e4f,
+        type: 3}
       propertyPath: overview.movement.isDebugLog
       value: 1
       objectReference: {fileID: 0}
@@ -453,6 +478,21 @@ PrefabInstance:
         type: 3}
       propertyPath: lifecycle.movement.isDebugLog
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1807461413602009156, guid: dec06b7a15916437297e6e8968a07e4f,
+        type: 3}
+      propertyPath: overview.movement.layerMask.m_Bits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1807461413602009156, guid: dec06b7a15916437297e6e8968a07e4f,
+        type: 3}
+      propertyPath: lifecycle.movement.layerMask.m_Bits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1807461413602009156, guid: dec06b7a15916437297e6e8968a07e4f,
+        type: 3}
+      propertyPath: lifecycle.movement.runningInputValue
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1807461413602009159, guid: dec06b7a15916437297e6e8968a07e4f,
         type: 3}
@@ -756,10 +796,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3852e0323ac5345ba8d794038643b4bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hero: {fileID: 0}
+  hero: {fileID: 1831683903}
   slider_Shield: {fileID: 0}
   slider_Health: {fileID: 1691627825}
   slider_Endurance: {fileID: 207667423}
+  errMsgCantJump: {fileID: 0}
   canvasGroup_DamageFX: {fileID: 1047013396}
 --- !u!224 &612003342
 RectTransform:
@@ -1981,6 +2022,30 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 306414362}
   m_PrefabAsset: {fileID: 0}
+--- !u!136 &1831683901 stripped
+CapsuleCollider:
+  m_CorrespondingSourceObject: {fileID: 1807461413602009158, guid: dec06b7a15916437297e6e8968a07e4f,
+    type: 3}
+  m_PrefabInstance: {fileID: 306414362}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &1831683902 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 1807461413602009157, guid: dec06b7a15916437297e6e8968a07e4f,
+    type: 3}
+  m_PrefabInstance: {fileID: 306414362}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1831683903 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1807461413602009156, guid: dec06b7a15916437297e6e8968a07e4f,
+    type: 3}
+  m_PrefabInstance: {fileID: 306414362}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1831683900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7ecd681b26b44dc6a0fd8a7479a13e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2113388552
 GameObject:
   m_ObjectHideFlags: 0

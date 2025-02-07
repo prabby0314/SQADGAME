@@ -2,6 +2,7 @@
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace AFPC {
 
@@ -82,11 +83,13 @@ namespace AFPC {
         private Vector3 origin;
         private Vector3 horizontalDir;
         private float heightRay = 5f;
+        public Scene currentScene;
 
         /// <summary>
         /// Initialize the movement. Generate physic material if needed. Prepare the rigidbody.
         /// </summary>
         public virtual void Initialize () {
+            currentScene = SceneManager.GetActiveScene();
             rb.freezeRotation = true;
             rb.mass = mass;
             rb.drag = drag;
@@ -234,7 +237,7 @@ namespace AFPC {
 		    if (!isJumpingAvailable) return;
 		    if (isGrounded || Ray() != "") {
                 isJumping = false;
-			    if (jumpingInputValue && endurance > 0.1f ) {
+			    if (jumpingInputValue && endurance > 0.1f && currentScene.name != "Wait") {
                     rb.velocity = new Vector3 (rb.velocity.x, jumpForce, rb.velocity.z);
                     isJumping = true;
                 }
@@ -259,7 +262,7 @@ namespace AFPC {
 	    public virtual void Running () {
 		    if (!isRunningAvaiable) return;
 		    if (!isGrounded) return;
-		    if (runningInputValue && endurance > 0.05f) {
+		    if (runningInputValue && endurance > 0.05f && isIdle()==false) {
                 isRunning = true;
                 releaseAcceleration = false;
 			    endurance -= Time.deltaTime * 2;
@@ -307,9 +310,7 @@ namespace AFPC {
                     endurance = Mathf.MoveTowards (endurance, referenceEndurance, Time.deltaTime*2f);
                 }
                 
-            }
-            else
-            {
+            }else{
                 idleTime = 0f;
             }
         }

@@ -46,6 +46,8 @@ public class Hero : MonoBehaviour {
         /* Read player input before check availability */
         ReadInput();
 
+        Debug.Log(movement.Ray());
+
         /* Block controller when unavailable */
         if (!lifecycle.Availability()) return;
 
@@ -66,8 +68,6 @@ public class Hero : MonoBehaviour {
 
         /* Control the jumping, ground search... */
         movement.Jumping();
-
-        Debug.Log(movement.Ray());
 
         /* Control the health and shield recovery */
         lifecycle.Runtime();
