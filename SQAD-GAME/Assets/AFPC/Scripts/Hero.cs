@@ -45,9 +45,6 @@ public class Hero : MonoBehaviour {
 
         /* Read player input before check availability */
         ReadInput();
-
-        Debug.Log(movement.Ray());
-
         /* Block controller when unavailable */
         if (!lifecycle.Availability()) return;
 
