@@ -1,0 +1,66 @@
+# ============= UNITY-SPECIFIC FILES =============
+
+# Binary assets tracked by Git LFS
+*.psd filter=lfs diff=lfs merge=lfs -text       # Photoshop files
+*.png filter=lfs diff=lfs merge=lfs -text       # Textures and images
+*.jpg filter=lfs diff=lfs merge=lfs -text
+*.jpeg filter=lfs diff=lfs merge=lfs -text
+*.tga filter=lfs diff=lfs merge=lfs -text
+*.gif filter=lfs diff=lfs merge=lfs -text
+*.tif filter=lfs diff=lfs merge=lfs -text
+*.tiff filter=lfs diff=lfs merge=lfs -text
+*.bmp filter=lfs diff=lfs merge=lfs -text
+*.exr filter=lfs diff=lfs merge=lfs -text       # HDR textures
+
+# Audio assets
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.mp3 filter=lfs diff=lfs merge=lfs -text
+*.ogg filter=lfs diff=lfs merge=lfs -text
+*.flac filter=lfs diff=lfs merge=lfs -text
+
+# Video assets
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+*.mov filter=lfs diff=lfs merge=lfs -text
+*.avi filter=lfs diff=lfs merge=lfs -text
+*.mkv filter=lfs diff=lfs merge=lfs -text
+
+# Unity asset files
+*.unity filter=lfs diff=lfs merge=lfs -text     # Scenes
+*.prefab filter=lfs diff=lfs merge=lfs -text    # Prefabs
+*.fbx filter=lfs diff=lfs merge=lfs -text       # 3D models
+*.obj filter=lfs diff=lfs merge=lfs -text
+
+# Archives (e.g., external packages)
+*.zip filter=lfs diff=lfs merge=lfs -text
+*.rar filter=lfs diff=lfs merge=lfs -text
+*.7z filter=lfs diff=lfs merge=lfs -text
+*.tar.gz filter=lfs diff=lfs merge=lfs -text
+
+# ============= TEXT FILES (DON'T TRACK WITH LFS) =============
+# These files are small and should stay in regular Git to save LFS storage
+*.cs text                                           # C# scripts
+*.shader text                                       # Shaders
+*.txt text                                          # Text files
+*.json text                                         # JSON files
+*.xml text                                          # XML files
+*.yaml text                                         # YAML files
+*.asmdef text                                       # Assembly definitions
+*.meta text                                         # Unity metadata
+*.gitignore text                                    # Gitignore file
+*.gitattributes text                                # Gitattributes file
+
+# ============= UNITY DEFAULT EXCLUSIONS =============
+# Exclude unnecessary or temporary files
+[Ll]ibrary/** !/[Ll]ibrary/*.asset                  # Keep important Library assets
+[Tt]emp/**
+[Oo]bj/**
+[Bb]uild/**                                         # Builds
+[Bb]uilds/**
+[Ll]ogs/**
+UserSettings/**                                     # User-specific settings
+MemoryCaptures/**                                   # Memory capture files
+*.csproj                                            # C# project files
+*.sln                                               # Solution files
+*.user                                              # User-specific files
+*.pidb                                              # MonoDevelop files
+*.booproj                                           # UnityScript files
