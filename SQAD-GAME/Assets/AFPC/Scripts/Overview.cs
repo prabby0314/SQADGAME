@@ -179,7 +179,7 @@ namespace AFPC {
         /// </summary>
         /// <param name="value"></param>
         public virtual void Shake (float value) {
-            shakingAmount = value-0.25f;
+            shakingAmount = value;
             if (isDebugLog) Debug.Log (camera.gameObject.name + ": Shake camera with: " + shakingAmount + " value.");
         }
 
