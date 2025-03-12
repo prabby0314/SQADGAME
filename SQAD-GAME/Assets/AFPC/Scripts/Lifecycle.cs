@@ -182,7 +182,7 @@ namespace AFPC {
 				    health += 1;
 				    CheckFrenzy ();
 			    }
-				if(movement.isIdle() == true)
+				if(movement.Idle() == true)
                 {
                     health +=2;
                     CheckFrenzy ();

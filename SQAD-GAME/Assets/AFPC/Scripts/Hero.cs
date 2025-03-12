@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿﻿using UnityEngine;
 using AFPC;
 
 /// <summary>
@@ -17,6 +17,8 @@ public class Hero : MonoBehaviour {
 
     /* Overview class. Look, Aim, Shake... */
     public Overview overview;
+
+    public bool onStairs = false;
 
     /* Optional assign the HUD */
     private void Awake () {
@@ -45,6 +47,9 @@ public class Hero : MonoBehaviour {
 
         /* Read player input before check availability */
         ReadInput();
+
+        UpdateEndurance();
+
         /* Block controller when unavailable */
         if (!lifecycle.Availability()) return;
 
@@ -82,6 +87,30 @@ public class Hero : MonoBehaviour {
         overview.RotateRigigbodyToLookDirection (movement.rb);
     }
 
+    private void UpdateEndurance()
+    {
+        // Check if the player is on stairs by raycasting downward.
+        onStairs = false;
+        RaycastHit hit;
+        // Adjust the ray length (e.g., 1.0f) as needed based on your character's height.
+        if (Physics.Raycast(movement.plr.transform.position, Vector3.down, out hit, 1.0f))
+        {
+            if (hit.collider.CompareTag("stair"))
+            {
+                onStairs = true;
+                Debug.Log(hit.collider.tag);
+            }
+        }
+        
+        // Treat stairs as ground.
+        bool treatAsGrounded = movement.isGrounded || onStairs;
+        
+        // If running or not grounded (and not on stairs), regenerate endurance slower.
+        float regenRate = (movement.isRunning || !treatAsGrounded) ? Time.deltaTime / 2f : Time.deltaTime;
+        movement.endurance = Mathf.MoveTowards(movement.endurance, movement.referenceEndurance, regenRate);
+    }
+
+
     private void LateUpdate () {
 
         /* Block controller when unavailable */
@@ -91,16 +120,22 @@ public class Hero : MonoBehaviour {
         overview.Follow (transform.position);
     }
 
-    private void ReadInput () {
-        overview.lookingInputValues.x = Input.GetAxis("Mouse X");
-        overview.lookingInputValues.y = Input.GetAxis("Mouse Y");
+        private void ReadInput() {
+        // Cache mouse and movement axis values
+        float mouseX = Input.GetAxis("Mouse X");
+        float mouseY = Input.GetAxis("Mouse Y");
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        // Update overview inputs
+        overview.lookingInputValues = new Vector2(mouseX, mouseY);
         overview.aimingInputValue = Input.GetMouseButton(1);
-        movement.movementInputValues.x = Input.GetAxis("Horizontal");
-        movement.movementInputValues.y = Input.GetAxis("Vertical");
+
+        // Update movement inputs
+        movement.movementInputValues = new Vector2(horizontal, vertical);
         movement.jumpingInputValue = Input.GetButtonDown("Jump");
         movement.runningInputValue = Input.GetKey(KeyCode.LeftShift);
     }
-
     private void DamageFX () {
         if (HUD) HUD.DamageFX();
         overview.Shake(0.75f);

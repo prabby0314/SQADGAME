@@ -36,10 +36,11 @@ public class HUD : MonoBehaviour
             slider_Health.value = hero.lifecycle.GetHealthValue();
             slider_Endurance.value = hero.movement.GetEnduranceValue();
 
-            if (movement.currentScene.name != "Wait" && Input.GetKeyDown(KeyCode.Space) && !isShowingErrorMessage)
+            /*if (Input.GetKeyDown(KeyCode.Space) && !isShowingErrorMessage)
             {
                 StartCoroutine(ShowErrorMessage());
             }
+            */
         }
         canvasGroup_DamageFX.alpha = Mathf.MoveTowards(canvasGroup_DamageFX.alpha, 0, Time.deltaTime * 2);
     }
