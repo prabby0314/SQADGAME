@@ -156,7 +156,7 @@ namespace AFPC {
                     if (hitTag == "wallJumpSurface")
                     {
                         // Wall jump: apply a boosted velocity.
-                        rb.velocity = new Vector3(rb.velocity.x, jumpForce * 10f, rb.velocity.z * 10f);
+                        rb.velocity = new Vector3(rb.velocity.x, jumpForce * 1.25f, rb.velocity.z * 1.5f);
                         Debug.Log("Wall jumping");
                     }
                 }
