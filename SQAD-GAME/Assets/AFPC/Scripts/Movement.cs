@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Threading;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
@@ -78,9 +78,11 @@ namespace AFPC {
         private float radius = 0.5f;
         private float numRays = 35f;
         private float verticalOffset = 0f;
+        private float angle;
+        private Vector3 dir;
+        private Vector3 origin;
+        private Vector3 horizontalDir;
         private float heightRay = 5f;
-
-        private Vector3[] cachedRayDirections;
 
         private Hero hero;
 
@@ -89,7 +91,6 @@ namespace AFPC {
         /// </summary>
         public virtual void Initialize() {
         preInitializeRB();
-        preComputeRays();
     }
 
         private void preInitializeRB()
@@ -109,26 +110,6 @@ namespace AFPC {
                     bounceCombine = PhysicMaterialCombine.Minimum
                 };
                 cc.material = physicMaterial;
-            }
-        }
-
-        private void preComputeRays()
-        {
-            // Precompute ray directions for efficiency.
-            int horizontalRays = Mathf.CeilToInt(numRays);
-            int verticalRays = Mathf.CeilToInt(numRays);
-            cachedRayDirections = new Vector3[horizontalRays * verticalRays];
-            
-            float verticalStep = verticalRays > 1 ? heightRay / (verticalRays - 1) : heightRay;
-            int index = 0;
-            for (int i = 0; i < horizontalRays; i++) {
-                // Compute horizontal angle evenly around a full circle.
-                float angle = i * (2f * Mathf.PI) / horizontalRays;
-                Vector3 horizontalDir = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle));
-                for (int j = 0; j < verticalRays; j++) {
-                    float y = -heightRay / 2f + j * verticalStep;
-                    cachedRayDirections[index++] = new Vector3(horizontalDir.x, y, horizontalDir.z).normalized;
-                }
             }
         }
 
@@ -174,29 +155,6 @@ namespace AFPC {
         /// Casts precomputed rays from the player’s position (offset by verticalOffset) and returns the tag
         /// of the first collider hit. Debug rays are drawn for visualization.
         /// </summary>
-        public virtual string Ray()
-        {
-            // Start from the player's position and add verticalOffset.
-            Vector3 origin = plr.transform.position;
-            origin.y += verticalOffset;
-            string hitTag = "";
-
-            foreach (var dir in cachedRayDirections)
-            {
-                RaycastHit hit;
-                bool didHit = Physics.Raycast(origin, dir, out hit, radius, layerMask);
-                Debug.DrawRay(origin, dir * radius, didHit ? Color.green : Color.red, 1.0f);
-                if (didHit)
-                {
-                    hitTag = hit.collider.tag;
-                    if (hitTag == "wallJumpSurface")
-                    {
-                        return hitTag;
-                    }
-                }
-            }
-            return hitTag;
-        }
 
 
 
