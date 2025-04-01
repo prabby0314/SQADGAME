@@ -83,6 +83,8 @@ namespace AFPC {
         private Vector3 origin;
         private Vector3 horizontalDir;
         private float heightRay = 5f;
+        public string hitTag = "";
+        private int wallJumpTimes = 0;
 
         private Hero hero;
 
@@ -114,6 +116,36 @@ namespace AFPC {
         }
 
         /// <summary>
+        /// Casts precomputed rays from the player’s position (offset by verticalOffset) and returns the tag
+        /// of the first collider hit. Debug rays are drawn for visualization.
+        /// </summary>
+
+        public void Ray()
+        {
+            if(isGrounded)
+            {
+                hitTag = "";
+                return;
+            }
+            origin = new Vector3(plr.transform.position.x,plr.transform.position.y+verticalOffset,plr.transform.position.z);
+            for(int i = 0; i < numRays; ++i)
+            {
+                angle = i * MathF.PI*2f /numRays;
+                horizontalDir = new Vector3(Mathf.Cos(angle),0,Mathf.Sin(angle));
+                for(float y = -heightRay/2f; y <= heightRay / 2; y += heightRay/numRays)
+                {
+                    dir = new Vector3(horizontalDir.x,y+verticalOffset,horizontalDir.z).normalized;
+                    RaycastHit hit;
+                    if(Physics.Raycast(origin,dir, out hit, radius, layerMask))
+                    {
+                        hitTag = hit.collider.tag;
+                    }
+                    Debug.DrawRay(origin,dir*radius,Color.red);
+                }
+            }
+        }
+
+        /// <summary>
         /// Jumping state. Better use it in Update.
         /// </summary>/// <summary>
         /// Jumping state. When the jump button is pressed, if grounded a normal jump is performed.
@@ -122,41 +154,35 @@ namespace AFPC {
         public virtual void Jumping()
         {
             if (!Available) return;
-
-            // Check if jump input is pressed and we have enough endurance
-            if (jumpingInputValue && endurance > 0.1f)
+            float regenRate = isRunning ? Time.deltaTime / 2f : Time.deltaTime;
+            Ray();
+            if (hitTag == "wallJumpSurface" && jumpingInputValue && endurance > 0.1f && wallJumpTimes <= 1)    
+            {
+                wallJumpTimes++;
+                endurance = isRunning ? DecreaseRate(endurance,endurance-1f): DecreaseRate(endurance,endurance-0.75f);
+                rb.velocity = new Vector3(rb.velocity.x, jumpForce * 1.25f, rb.velocity.z * 1.5f);
+                Debug.Log("Wall jumping");
+            }
+            else if (jumpingInputValue && endurance > 0.1f && hitTag == "")
             {
                 if (isGrounded)
                 {
-                    // Normal jump when on the ground.
+                    wallJumpTimes = 0;
+                    endurance = isRunning ? DecreaseRate(endurance,endurance-1f): DecreaseRate(endurance,endurance-0.5f);
                     rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
-                }
-                else
-                {
-                    string hitTag = Ray();
-                    if (hitTag == "wallJumpSurface")
-                    {
-                        // Wall jump: apply a boosted velocity.
-                        rb.velocity = new Vector3(rb.velocity.x, jumpForce * 1.25f, rb.velocity.z * 1.5f);
-                        Debug.Log("Wall jumping");
-                    }
-                }
-            }
-            else
-            {
-                if (!isGrounded && hero.onStairs != true)
-                {
-                    endurance -= isRunning ? Time.deltaTime * 2f : Time.deltaTime * 1.25f;
+                    Debug.Log("normal jump");
                 }
             }
         }
 
-        /// <summary>
-        /// Casts precomputed rays from the player’s position (offset by verticalOffset) and returns the tag
-        /// of the first collider hit. Debug rays are drawn for visualization.
-        /// </summary>
-
-
+        private float DecreaseRate(float currentEndurance, float goToEndurance)
+        {
+            if(currentEndurance > goToEndurance)
+            {
+                currentEndurance-=Time.deltaTime;
+            }
+            return currentEndurance;
+        }
 
         /// <summary>
         /// Running state. Better use it in Update.
