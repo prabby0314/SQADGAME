@@ -154,28 +154,26 @@ namespace AFPC {
         public virtual void Jumping()
         {
             if (!Available) return;
-            float regenRate = isRunning ? Time.deltaTime / 2f : Time.deltaTime;
+
             Ray();
             if (hitTag == "wallJumpSurface" && jumpingInputValue && endurance > 0.1f && wallJumpTimes <= 1)    
-            {
+            {                                                                                                                                                                                                                                                                                                                      
                 wallJumpTimes++;
-                endurance = isRunning ? DecreaseRate(endurance,endurance-1f): DecreaseRate(endurance,endurance-0.75f);
                 rb.velocity = new Vector3(rb.velocity.x, jumpForce * 1.25f, rb.velocity.z * 1.5f);
                 Debug.Log("Wall jumping");
-            }
+            }                                                                                                                                                                                                                                                                                                                                                                                                                       
             else if (jumpingInputValue && endurance > 0.1f && hitTag == "")
             {
                 if (isGrounded)
                 {
                     wallJumpTimes = 0;
-                    endurance = isRunning ? DecreaseRate(endurance,endurance-1f): DecreaseRate(endurance,endurance-0.5f);
                     rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
                     Debug.Log("normal jump");
                 }
             }
         }
-
-        private float DecreaseRate(float currentEndurance, float goToEndurance)
+        
+        public float DecreaseRate(float currentEndurance, float goToEndurance)
         {
             if(currentEndurance > goToEndurance)
             {

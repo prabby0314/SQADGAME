@@ -49,8 +49,6 @@ public class Hero : MonoBehaviour {
         /* Read player input before check availability */
         ReadInput();
 
-        UpdateEndurance();
-
         /* Block controller when unavailable */
         if (!lifecycle.Availability()) return;
 
@@ -74,8 +72,28 @@ public class Hero : MonoBehaviour {
 
         /* Control the health and shield recovery */
         lifecycle.Runtime();
-    }
 
+        if(movement.jumpingInputValue)
+        {
+            if(movement.isRunning)
+            {
+                if(movement.endurance > movement.endurance-1f)
+                {
+                    movement.endurance-=Time.deltaTime*2f;
+                    Debug.Log(movement.endurance);
+                }
+            }
+            else 
+            {
+                if(movement.endurance > movement.endurance-.75f)
+                {
+                    movement.endurance-=Time.deltaTime*2f;
+                    Debug.Log(movement.endurance);
+                }
+            }
+        }
+        UpdateEndurance();
+    }
     private void FixedUpdate () {
 
         /* Block controller when unavailable */
