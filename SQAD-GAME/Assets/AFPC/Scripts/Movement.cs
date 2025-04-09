@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
@@ -154,8 +154,11 @@ namespace AFPC {
         public virtual void Jumping()
         {
             if (!Available) return;
-
             Ray();
+            if(jumpingInputValue)
+            {
+                hero.jumping = true;
+            }
             if (hitTag == "wallJumpSurface" && jumpingInputValue && endurance > 0.1f && wallJumpTimes <= 1)    
             {                                                                                                                                                                                                                                                                                                                      
                 wallJumpTimes++;
@@ -171,15 +174,6 @@ namespace AFPC {
                     Debug.Log("normal jump");
                 }
             }
-        }
-        
-        public float DecreaseRate(float currentEndurance, float goToEndurance)
-        {
-            if(currentEndurance > goToEndurance)
-            {
-                currentEndurance-=Time.deltaTime;
-            }
-            return currentEndurance;
         }
 
         /// <summary>

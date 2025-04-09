@@ -1,4 +1,5 @@
-﻿﻿using System.ComponentModel;
+using System.Security.Cryptography;
+using System.ComponentModel;
 using UnityEngine;
 using AFPC;
 
@@ -20,6 +21,8 @@ public class Hero : MonoBehaviour {
     public Overview overview;
 
     public bool onStairs = false;
+
+    public bool jumping = false;
 
     /* Optional assign the HUD */
     private void Awake () {
@@ -45,7 +48,6 @@ public class Hero : MonoBehaviour {
     }
 
     private void Update () {
-
         /* Read player input before check availability */
         ReadInput();
 
@@ -72,14 +74,22 @@ public class Hero : MonoBehaviour {
 
         /* Control the health and shield recovery */
         lifecycle.Runtime();
+        
+        jumpingEnduranceUpdaterInAir();
+        UpdateEndurance();
+    }
 
-        if(movement.jumpingInputValue)
+    private void jumpingEnduranceUpdaterInAir()
+    {
+
+        handleJumpingState();
+        if(jumping)
         {
             if(movement.isRunning)
             {
                 if(movement.endurance > movement.endurance-1f)
                 {
-                    movement.endurance-=Time.deltaTime*2f;
+                    movement.endurance-=Time.deltaTime*1.5f;
                     Debug.Log(movement.endurance);
                 }
             }
@@ -87,12 +97,23 @@ public class Hero : MonoBehaviour {
             {
                 if(movement.endurance > movement.endurance-.75f)
                 {
-                    movement.endurance-=Time.deltaTime*2f;
+                    movement.endurance-=Time.deltaTime*1.25f;
                     Debug.Log(movement.endurance);
                 }
             }
         }
-        UpdateEndurance();
+    }
+
+    private void handleJumpingState()
+    {
+        if(jumping == true && !movement.isGrounded)
+        {
+            jumping = true;
+        }
+        else if(jumping == true && movement.isGrounded)
+        {
+            jumping = false;
+        }
     }
     private void FixedUpdate () {
 
