@@ -74,16 +74,13 @@ public class Hero : MonoBehaviour {
 
         /* Control the health and shield recovery */
         lifecycle.Runtime();
-        
         jumpingEnduranceUpdaterInAir();
         UpdateEndurance();
     }
 
-    private void jumpingEnduranceUpdaterInAir()
+    public void jumpingEnduranceUpdaterInAir()
     {
-
-        handleJumpingState();
-        if(jumping)
+        if(jumping == true)
         {
             if(movement.isRunning)
             {
@@ -92,29 +89,26 @@ public class Hero : MonoBehaviour {
                     movement.endurance-=Time.deltaTime*1.5f;
                     Debug.Log(movement.endurance);
                 }
+                else
+                {
+                    jumping = false;
+                }
             }
             else 
             {
                 if(movement.endurance > movement.endurance-.75f)
                 {
                     movement.endurance-=Time.deltaTime*1.25f;
-                    Debug.Log(movement.endurance);
+    //                Debug.Log(movement.endurance);
+                }
+                else
+                {
+                    jumping = false;
                 }
             }
         }
     }
 
-    private void handleJumpingState()
-    {
-        if(jumping == true && !movement.isGrounded)
-        {
-            jumping = true;
-        }
-        else if(jumping == true && movement.isGrounded)
-        {
-            jumping = false;
-        }
-    }
     private void FixedUpdate () {
 
         /* Block controller when unavailable */

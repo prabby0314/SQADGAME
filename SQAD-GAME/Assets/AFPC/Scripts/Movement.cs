@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
@@ -155,10 +156,6 @@ namespace AFPC {
         {
             if (!Available) return;
             Ray();
-            if(jumpingInputValue)
-            {
-                hero.jumping = true;
-            }
             if (hitTag == "wallJumpSurface" && jumpingInputValue && endurance > 0.1f && wallJumpTimes <= 1)    
             {                                                                                                                                                                                                                                                                                                                      
                 wallJumpTimes++;
@@ -171,6 +168,7 @@ namespace AFPC {
                 {
                     wallJumpTimes = 0;
                     rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+                    hero.jumping = true;
                     Debug.Log("normal jump");
                 }
             }
