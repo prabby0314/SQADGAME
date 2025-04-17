@@ -156,27 +156,31 @@ namespace AFPC {
         {
             if (!Available) return;
             Ray();
-            if (hitTag == "wallJumpSurface" && jumpingInputValue && endurance > 0.1f && wallJumpTimes <= 1)    
-            {                                                                                                                                                                                                                                                                                                                      
-                wallJumpTimes++;
-                rb.velocity = new Vector3(rb.velocity.x, jumpForce * 1.25f, rb.velocity.z * 1.5f);
-                Debug.Log("Wall jumping");
-            }                                                                                                                                                                                                                                                                                                                                                                                                                       
-            else if (jumpingInputValue && endurance > 0.1f && hitTag == "")
+
+            if(jumpingInputValue)
             {
-                if (isGrounded)
+                hero.jumping = true;
+                Debug.Log("jumping: "+hero.jumping);
+                if(hitTag == "wallJumpSurface" && endurance > 0.1f && wallJumpTimes <= 1)
                 {
-                    wallJumpTimes = 0;
-                    rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
-                    hero.jumping = true;
-                    Debug.Log("normal jump");
+                    wallJumpTimes++;
+                    rb.velocity = new Vector3(rb.velocity.x, jumpForce * 1.25f, rb.velocity.z * 1.5f);
+                    Debug.Log("Wall jumping");
+                }
+                else if (endurance > 0.1f && hitTag == "")
+                {
+                    if (isGrounded)
+                    {
+                        wallJumpTimes = 0;
+                        rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+                    }
                 }
             }
-            else if(isGrounded && !jumpingInputValue && hero.jumping == true)
+            else if(isGrounded && !jumpingInputValue)
             {
                 hero.jumping = false;
-            }
-            Debug.Log("jumping: "+hero.jumping);
+                Debug.Log("jumping: "+hero.jumping);
+            }                                                                                                                                                                                                                                                                                                                                                                                                                
         }
 
         /// <summary>

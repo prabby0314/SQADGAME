@@ -69,11 +69,11 @@ public class Hero : MonoBehaviour {
         /* If player idle faster endurance regen*/
         movement.Idle();
 
+        /* Control the health recovery */
+        lifecycle.Runtime();
+
         /* Control the jumping, ground search... */
         movement.Jumping();
-
-        /* Control the health and shield recovery */
-        lifecycle.Runtime();
         
         jumpingEnduranceUpdaterInAir();
         UpdateEndurance();
