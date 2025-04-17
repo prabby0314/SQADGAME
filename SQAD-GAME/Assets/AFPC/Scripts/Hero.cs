@@ -74,6 +74,7 @@ public class Hero : MonoBehaviour {
 
         /* Control the health and shield recovery */
         lifecycle.Runtime();
+        
         jumpingEnduranceUpdaterInAir();
         UpdateEndurance();
     }
@@ -82,6 +83,7 @@ public class Hero : MonoBehaviour {
     {
         if(jumping == true)
         {
+            Debug.Log("jump-indurance");
             if(movement.isRunning)
             {
                 if(movement.endurance > movement.endurance-1f)
@@ -89,10 +91,7 @@ public class Hero : MonoBehaviour {
                     movement.endurance-=Time.deltaTime*1.5f;
                     Debug.Log(movement.endurance);
                 }
-                else
-                {
-                    jumping = false;
-                }
+
             }
             else 
             {
@@ -101,10 +100,7 @@ public class Hero : MonoBehaviour {
                     movement.endurance-=Time.deltaTime*1.25f;
     //                Debug.Log(movement.endurance);
                 }
-                else
-                {
-                    jumping = false;
-                }
+
             }
         }
     }

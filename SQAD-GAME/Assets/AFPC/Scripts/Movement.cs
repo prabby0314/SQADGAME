@@ -172,6 +172,11 @@ namespace AFPC {
                     Debug.Log("normal jump");
                 }
             }
+            else if(isGrounded && !jumpingInputValue && hero.jumping == true)
+            {
+                hero.jumping = false;
+            }
+            Debug.Log("jumping: "+hero.jumping);
         }
 
         /// <summary>
