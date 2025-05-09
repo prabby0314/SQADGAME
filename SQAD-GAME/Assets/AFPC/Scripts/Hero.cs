@@ -75,32 +75,29 @@ public class Hero : MonoBehaviour {
         /* Control the jumping, ground search... */
         movement.Jumping();
         
+        Debug.Log("jumping: "+jumping);
+
         jumpingEnduranceUpdaterInAir();
         UpdateEndurance();
     }
 
     public void jumpingEnduranceUpdaterInAir()
     {
-        if(jumping == true)
+        if(movement.isRunning && jumping == true)
         {
-            Debug.Log("jump-indurance");
-            if(movement.isRunning)
+            if(movement.endurance > movement.endurance-1f)
             {
-                if(movement.endurance > movement.endurance-1f)
-                {
-                    movement.endurance-=Time.deltaTime*1.5f;
-                    Debug.Log(movement.endurance);
-                }
-
+                movement.endurance-=Time.deltaTime*1.5f;
+                Debug.Log(movement.endurance);
             }
-            else 
-            {
-                if(movement.endurance > movement.endurance-.75f)
-                {
-                    movement.endurance-=Time.deltaTime*1.25f;
-    //                Debug.Log(movement.endurance);
-                }
 
+        }
+        else 
+        {
+            if(movement.endurance > movement.endurance-.75f && jumping == true)
+            {
+                movement.endurance-=Time.deltaTime*1.25f;
+                //Debug.Log(movement.endurance);
             }
         }
     }
@@ -123,7 +120,7 @@ public class Hero : MonoBehaviour {
         onStairs = false;
         RaycastHit hit;
         // Adjust the ray length (e.g., 1.0f) as needed based on your character's height.
-        if (Physics.Raycast(movement.plr.transform.position, Vector3.down, out hit, 1.0f))
+        if (Physics.Raycast(movement.plr.transform.position, Vector3.down, out hit, 1.25f))
         {
             if (hit.collider.CompareTag("stair"))
             {
@@ -136,7 +133,7 @@ public class Hero : MonoBehaviour {
         bool treatAsGrounded = movement.isGrounded || onStairs;
         
         // If running or not grounded (and not on stairs), regenerate endurance slower.
-        float regenRate = (movement.isRunning || !treatAsGrounded) ? Time.deltaTime / 2f : Time.deltaTime;
+        float regenRate = (movement.isRunning || !treatAsGrounded) ? Time.deltaTime / 1.5f : Time.deltaTime;
         movement.endurance = Mathf.MoveTowards(movement.endurance, movement.referenceEndurance, regenRate);
     }
 

@@ -160,7 +160,6 @@ namespace AFPC {
             if(jumpingInputValue)
             {
                 hero.jumping = true;
-                Debug.Log("jumping: "+hero.jumping);
                 if(hitTag == "wallJumpSurface" && endurance > 0.1f && wallJumpTimes <= 1)
                 {
                     wallJumpTimes++;
@@ -176,10 +175,14 @@ namespace AFPC {
                     }
                 }
             }
-            else if(isGrounded && !jumpingInputValue)
+            else if(!isGrounded)
+            {
+                hero.jumping = true;
+            }
+            else
             {
                 hero.jumping = false;
-                Debug.Log("jumping: "+hero.jumping);
+                
             }                                                                                                                                                                                                                                                                                                                                                                                                                
         }
 
