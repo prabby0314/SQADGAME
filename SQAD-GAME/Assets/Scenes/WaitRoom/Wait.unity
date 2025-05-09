@@ -887,6 +887,7 @@ MonoBehaviour:
     isGrounded: 0
     rb: {fileID: 0}
     cc: {fileID: 0}
+    hitTag: 
   slider_Health: {fileID: 1691627825}
   slider_Endurance: {fileID: 207667423}
   errMsgCantJump: {fileID: 1558930975}
@@ -2138,8 +2139,8 @@ Transform:
   m_GameObject: {fileID: 1659444045}
   serializedVersion: 2
   m_LocalRotation: {x: -0.35230243, y: -0, z: -0, w: 0.93588626}
-  m_LocalPosition: {x: -0.022675037, y: 1.3592135, z: 14.213723}
-  m_LocalScale: {x: 10.964783, y: 0.1, z: 1.6430169}
+  m_LocalPosition: {x: -0.022675037, y: 1.33, z: 14.19}
+  m_LocalScale: {x: 10.964783, y: 0.1, z: 1.265961}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 552495126}
@@ -2474,7 +2475,7 @@ Transform:
   m_GameObject: {fileID: 2113388552}
   serializedVersion: 2
   m_LocalRotation: {x: -0.38130847, y: -0, z: -0, w: 0.9244479}
-  m_LocalPosition: {x: -0.022675037, y: 0.24921352, z: 13.033723}
+  m_LocalPosition: {x: -0.022675037, y: 0.35, z: 13.11}
   m_LocalScale: {x: 10.964783, y: 0.10000001, z: 1.643017}
   m_ConstrainProportionsScale: 0
   m_Children: []
