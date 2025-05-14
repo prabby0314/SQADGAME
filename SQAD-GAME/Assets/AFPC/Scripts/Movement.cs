@@ -52,6 +52,7 @@ namespace AFPC {
         private Vector3 groungCheckPosition;
         private bool isLandingActionPerformed;
         private UnityAction landingAction;
+        public bool isJumping = false;
 	
         [Header("Physics")]
         public bool isGeneratePhysicMaterial = true;
@@ -155,35 +156,27 @@ namespace AFPC {
         public virtual void Jumping()
         {
             if (!Available) return;
+            if(endurance < 0.2f) return;
             Ray();
 
-            if(jumpingInputValue)
+            if (isGrounded && hitTag == "" && jumpingInputValue)
             {
-                hero.jumping = true;
-                if(hitTag == "wallJumpSurface" && endurance > 0.1f && wallJumpTimes <= 1)
+                wallJumpTimes = 0;
+                rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+                isJumping = true;
+                Debug.Log("Normal jump");
+            }
+
+            else if(!isGrounded)
+            {
+                if(jumpingInputValue && hitTag == "wallJumpSurface" && wallJumpTimes <= 1)
                 {
                     wallJumpTimes++;
                     rb.velocity = new Vector3(rb.velocity.x, jumpForce * 1.25f, rb.velocity.z * 1.5f);
+                    isJumping = true;
                     Debug.Log("Wall jumping");
                 }
-                else if (endurance > 0.1f && hitTag == "")
-                {
-                    if (isGrounded)
-                    {
-                        wallJumpTimes = 0;
-                        rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
-                    }
-                }
-            }
-            else if(!isGrounded)
-            {
-                hero.jumping = true;
-            }
-            else
-            {
-                hero.jumping = false;
-                
-            }                                                                                                                                                                                                                                                                                                                                                                                                                
+            }                                                                                                                                                                                                                                                                                                                                                                                       
         }
 
         /// <summary>
@@ -198,6 +191,7 @@ namespace AFPC {
                 releaseAcceleration = false;
 			    currentAcceleration = Mathf.MoveTowards (currentAcceleration, runningAcceleration, Time.deltaTime * 5);
                 endurance -= Time.deltaTime * 1.5f;
+                Debug.Log("Running");
 		    }
 		    else {
                 isRunning = false;

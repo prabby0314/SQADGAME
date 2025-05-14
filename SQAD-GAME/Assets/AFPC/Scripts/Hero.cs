@@ -22,7 +22,6 @@ public class Hero : MonoBehaviour {
 
     public bool onStairs = false;
 
-    public bool jumping = false;
 
     /* Optional assign the HUD */
     private void Awake () {
@@ -74,30 +73,29 @@ public class Hero : MonoBehaviour {
 
         /* Control the jumping, ground search... */
         movement.Jumping();
-        
-        Debug.Log("jumping: "+jumping);
 
         jumpingEnduranceUpdaterInAir();
         UpdateEndurance();
+
+        if (movement.isGrounded && movement.isJumping)
+        {
+            movement.isJumping = false;
+        }
     }
 
     public void jumpingEnduranceUpdaterInAir()
     {
-        if(movement.isRunning && jumping == true)
-        {
-            if(movement.endurance > movement.endurance-1f)
-            {
-                movement.endurance-=Time.deltaTime*1.5f;
-                Debug.Log(movement.endurance);
-            }
+        if (!movement.isJumping || onStairs) return;
 
+        if(movement.isRunning && movement.endurance > movement.endurance-1f)
+        {
+            movement.endurance-=Time.deltaTime*1.5f;
         }
         else 
         {
-            if(movement.endurance > movement.endurance-.75f && jumping == true)
+            if(movement.endurance > movement.endurance-.75f)
             {
                 movement.endurance-=Time.deltaTime*1.25f;
-                //Debug.Log(movement.endurance);
             }
         }
     }
@@ -125,7 +123,6 @@ public class Hero : MonoBehaviour {
             if (hit.collider.CompareTag("stair"))
             {
                 onStairs = true;
-                Debug.Log(hit.collider.tag);
             }
         }
         
