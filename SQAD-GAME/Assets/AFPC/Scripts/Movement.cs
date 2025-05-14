@@ -53,6 +53,7 @@ namespace AFPC {
         private bool isLandingActionPerformed;
         private UnityAction landingAction;
         public bool isJumping = false;
+        public bool onWall = false;
 	
         [Header("Physics")]
         public bool isGeneratePhysicMaterial = true;
@@ -127,6 +128,7 @@ namespace AFPC {
             if(isGrounded)
             {
                 hitTag = "";
+                onWall = false;
                 return;
             }
             origin = new Vector3(plr.transform.position.x,plr.transform.position.y+verticalOffset,plr.transform.position.z);
@@ -134,6 +136,7 @@ namespace AFPC {
             {
                 angle = i * MathF.PI*2f /numRays;
                 horizontalDir = new Vector3(Mathf.Cos(angle),0,Mathf.Sin(angle));
+
                 for(float y = -heightRay/2f; y <= heightRay / 2; y += heightRay/numRays)
                 {
                     dir = new Vector3(horizontalDir.x,y+verticalOffset,horizontalDir.z).normalized;
@@ -141,10 +144,15 @@ namespace AFPC {
                     if(Physics.Raycast(origin,dir, out hit, radius, layerMask))
                     {
                         hitTag = hit.collider.tag;
+                        if(hitTag == "wallJumpSurface" && !isGrounded)
+                        {
+                            onWall = true;
+                        }
                     }
                     Debug.DrawRay(origin,dir*radius,Color.red);
                 }
             }
+
         }
 
         /// <summary>
@@ -157,13 +165,12 @@ namespace AFPC {
         {
             if (!Available) return;
             if(endurance < 0.2f) return;
-            Ray();
 
             if (isGrounded && hitTag == "" && jumpingInputValue)
             {
                 wallJumpTimes = 0;
+                endurance -= .075f;
                 rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
-                isJumping = true;
                 Debug.Log("Normal jump");
             }
 
@@ -173,7 +180,7 @@ namespace AFPC {
                 {
                     wallJumpTimes++;
                     rb.velocity = new Vector3(rb.velocity.x, jumpForce * 1.25f, rb.velocity.z * 1.5f);
-                    isJumping = true;
+                    endurance -= .2f;
                     Debug.Log("Wall jumping");
                 }
             }                                                                                                                                                                                                                                                                                                                                                                                       
@@ -259,6 +266,7 @@ namespace AFPC {
             }
             else {
                 isGrounded = false;
+                isJumping = true;
                 isLandingActionPerformed = false;
                 rb.drag = 0.5f;
             }

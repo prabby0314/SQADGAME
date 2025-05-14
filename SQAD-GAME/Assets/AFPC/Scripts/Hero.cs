@@ -74,6 +74,9 @@ public class Hero : MonoBehaviour {
         /* Control the jumping, ground search... */
         movement.Jumping();
 
+        /* Ray for checking which game-object player is attached... */
+        movement.Ray();
+
         jumpingEnduranceUpdaterInAir();
         UpdateEndurance();
 
@@ -92,10 +95,14 @@ public class Hero : MonoBehaviour {
             movement.endurance-=Time.deltaTime*1.5f;
         }
         else 
-        {
+        {   
             if(movement.endurance > movement.endurance-.75f)
             {
                 movement.endurance-=Time.deltaTime*1.25f;
+            }
+            else if(movement.onWall == false)
+            {
+                movement.endurance-=Time.deltaTime;
             }
         }
     }
