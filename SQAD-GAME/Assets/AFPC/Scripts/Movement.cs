@@ -244,7 +244,7 @@ namespace AFPC {
                 isRunning = true;
                 releaseAcceleration = false;
 			    currentAcceleration = Mathf.MoveTowards (currentAcceleration, runningAcceleration, Time.deltaTime * 5);
-                endurance -= Time.deltaTime * 1.5f;
+                endurance -= Time.deltaTime * 1.48f;
                 Debug.Log("Running");
 		    }
 		    else {
@@ -254,9 +254,8 @@ namespace AFPC {
 	    }
         public virtual bool Idle()
         {
-            // Determine if the player is idle (i.e. no WASD keys pressed)
-            bool idle = !(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
-                        Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.Space));
+            // Determine if the player is idle (no keys pressed)
+            bool idle = !(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.Space));
 
             if (idle)
             {
@@ -264,7 +263,7 @@ namespace AFPC {
                 if (idleTime >= idleTimeOut)
                 {
                     // restores endurance faster to its reference value when idle
-                    endurance = Mathf.MoveTowards(endurance, referenceEndurance, Time.deltaTime * 2f);
+                    endurance = Mathf.MoveTowards(endurance, referenceEndurance, Time.deltaTime * 1.8f);
                 }
             }
             else
