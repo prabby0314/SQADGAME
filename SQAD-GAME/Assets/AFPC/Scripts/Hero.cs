@@ -62,6 +62,9 @@ public class Hero : MonoBehaviour {
         /* Shake camera state. Required "physical camera" mode on */
         overview.Shaking();
 
+        /* Control the crouch */
+        movement.Crouching();
+
         /* Control the speed */
         movement.Running();
         
@@ -79,31 +82,26 @@ public class Hero : MonoBehaviour {
 
         jumpingEnduranceUpdaterInAir();
         UpdateEndurance();
-
-        if (movement.isGrounded && movement.isJumping)
-        {
-            movement.isJumping = false;
-        }
     }
 
     public void jumpingEnduranceUpdaterInAir()
     {
         if (!movement.isJumping || onStairs) return;
 
-        if(movement.isRunning && movement.endurance > movement.endurance-1f)
+        if(movement.onWall)
+        {
+            movement.endurance-=Time.deltaTime;
+            Debug.Log("onWall endurance");
+        }
+        else if(movement.isRunning && movement.endurance > movement.endurance-1f)
         {
             movement.endurance-=Time.deltaTime*1.5f;
+            Debug.Log("Running Jump endurance");
         }
-        else 
-        {   
-            if(movement.endurance > movement.endurance-.75f)
-            {
-                movement.endurance-=Time.deltaTime*1.25f;
-            }
-            else if(movement.onWall == false)
-            {
-                movement.endurance-=Time.deltaTime;
-            }
+        else if(movement.endurance > movement.endurance-.75f)
+        {
+            movement.endurance-=Time.deltaTime*1.25f;
+            Debug.Log("Jumping endurance");
         }
     }
 
@@ -166,6 +164,7 @@ public class Hero : MonoBehaviour {
         movement.movementInputValues = new Vector2(horizontal, vertical);
         movement.jumpingInputValue = Input.GetButtonDown("Jump");
         movement.runningInputValue = Input.GetKey(KeyCode.LeftShift);
+        movement.crouchInputValue = Input.GetKey(KeyCode.LeftControl);
     }
     private void DamageFX () {
         if (HUD) HUD.DamageFX();

@@ -54,6 +54,15 @@ namespace AFPC {
         private UnityAction landingAction;
         public bool isJumping = false;
         public bool onWall = false;
+
+        [Header("Crouching")]
+        public float crouchHeight = 0.8f;
+        public bool isCrouching = false;
+        public float originalAcceleration;
+        public float crouchSpeed;
+        public bool crouchInputValue;
+        private float originalHeight;
+        private Vector3 originalCenter;
 	
         [Header("Physics")]
         public bool isGeneratePhysicMaterial = true;
@@ -96,6 +105,10 @@ namespace AFPC {
         /// </summary>
         public virtual void Initialize() {
         preInitializeRB();
+        originalHeight = cc.height;
+        originalCenter = cc.center;
+        originalAcceleration = referenceAcceleration;
+        crouchSpeed = referenceAcceleration *0.5f;
     }
 
         private void preInitializeRB()
@@ -155,6 +168,38 @@ namespace AFPC {
 
         }
 
+        public virtual void Crouching() 
+        {
+            if (!isMovementAvailable) return;
+            if(isJumping || isRunning)
+            {
+                cc.height = originalHeight;
+                cc.center = originalCenter;
+                referenceAcceleration = originalAcceleration;
+                return;
+            }
+            if (crouchInputValue) {
+                    if (!isCrouching) {
+                        // Start crouching
+                        isCrouching = true;
+                        cc.height = crouchHeight;
+                        cc.center = originalCenter * (crouchHeight / originalHeight);
+                        referenceAcceleration = crouchSpeed;
+                    }
+                }
+                else {
+                    if (isCrouching) {
+                        if (!Physics.Raycast(rb.position, Vector3.up, originalHeight)) {
+                            // Stop crouching
+                            isCrouching = false;
+                            cc.height = originalHeight;
+                            cc.center = originalCenter;
+                            referenceAcceleration = originalAcceleration;
+                        }
+                    }
+                }
+
+        }
         /// <summary>
         /// Jumping state. Better use it in Update.
         /// </summary>/// <summary>
@@ -171,7 +216,8 @@ namespace AFPC {
                 wallJumpTimes = 0;
                 endurance -= .075f;
                 rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
-                Debug.Log("Normal jump");
+                isJumping = true;
+                //Debug.Log("Normal jump");
             }
 
             else if(!isGrounded)
@@ -179,9 +225,10 @@ namespace AFPC {
                 if(jumpingInputValue && hitTag == "wallJumpSurface" && wallJumpTimes <= 1)
                 {
                     wallJumpTimes++;
-                    rb.velocity = new Vector3(rb.velocity.x, jumpForce * 1.25f, rb.velocity.z * 1.5f);
-                    endurance -= .2f;
-                    Debug.Log("Wall jumping");
+                    rb.velocity = new Vector3(rb.velocity.x, jumpForce * 1.25f, rb.velocity.z * 1.25f);
+                    isJumping = true;
+                    endurance -= .15f;
+                    //Debug.Log("Wall jumping");
                 }
             }                                                                                                                                                                                                                                                                                                                                                                                       
         }
@@ -261,12 +308,12 @@ namespace AFPC {
                 if (!isLandingActionPerformed) {
                     isLandingActionPerformed = true;
                     landingAction?.Invoke ();
+                    isJumping = false;
                 }
                 rb.drag = drag;
             }
             else {
                 isGrounded = false;
-                isJumping = true;
                 isLandingActionPerformed = false;
                 rb.drag = 0.5f;
             }
