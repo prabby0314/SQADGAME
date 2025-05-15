@@ -93,14 +93,14 @@ public class Hero : MonoBehaviour {
             movement.endurance-=Time.deltaTime;
             Debug.Log("onWall endurance");
         }
-        else if(movement.isRunning && movement.endurance > movement.endurance-.85f)
+        else if(movement.isRunning && movement.endurance > movement.endurance-.8f)
         {
-            movement.endurance-=Time.deltaTime*1.45f;
+            movement.endurance-=Time.deltaTime*1.4f;
             Debug.Log("Running Jump endurance");
         }
-        else if(movement.endurance > movement.endurance-.65f)
+        else if(movement.endurance > movement.endurance-.5f)
         {
-            movement.endurance-=Time.deltaTime*1.25f;
+            movement.endurance-=Time.deltaTime*1.2f;
             Debug.Log("Jumping endurance");
         }
     }
@@ -135,7 +135,7 @@ public class Hero : MonoBehaviour {
         bool treatAsGrounded = movement.isGrounded || onStairs;
         
         // If running or not grounded (and not on stairs), regenerate endurance slower.
-        float regenRate = (movement.isRunning || !treatAsGrounded) ? Time.deltaTime / 2.2f : Time.deltaTime / 1.8f;
+        float regenRate = (movement.isRunning || !treatAsGrounded) ? Time.deltaTime / 2f : Time.deltaTime / 1.5f;
         movement.endurance = Mathf.MoveTowards(movement.endurance, movement.referenceEndurance, regenRate);
     }
 

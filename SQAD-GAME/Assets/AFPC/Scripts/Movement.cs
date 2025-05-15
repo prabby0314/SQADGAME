@@ -157,7 +157,10 @@ namespace AFPC {
                     if(Physics.Raycast(origin,dir, out hit, radius, layerMask))
                     {
                         hitTag = hit.collider.tag;
-                        if(hitTag == "wallJumpSurface" && !isGrounded)
+                        if(hitTag == "wallJumpSurface" && !isGrounded) // *do*-if hit collider is null make it so hitTag is empty-*do* //
+                        {
+                            hitTag = "";
+                        }
                         {
                             onWall = true;
                         }
@@ -225,7 +228,7 @@ namespace AFPC {
                 if(jumpingInputValue && hitTag == "wallJumpSurface" && wallJumpTimes <= 1)
                 {
                     wallJumpTimes++;
-                    rb.velocity = new Vector3(rb.velocity.x, jumpForce * 1.25f, rb.velocity.z * 1.25f);
+                    rb.velocity = new Vector3(rb.velocity.x, jumpForce * 1.05f, rb.velocity.z * 1.25f);
                     isJumping = true;
                     endurance -= .15f;
                     //Debug.Log("Wall jumping");
