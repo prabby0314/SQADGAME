@@ -159,9 +159,6 @@ namespace AFPC {
                         hitTag = hit.collider.tag;
                         if(hitTag == "wallJumpSurface" && !isGrounded) // *do*-if hit collider is null make it so hitTag is empty-*do* //
                         {
-                            hitTag = "";
-                        }
-                        {
                             onWall = true;
                         }
                     }
@@ -190,18 +187,29 @@ namespace AFPC {
                         referenceAcceleration = crouchSpeed;
                     }
                 }
-                else {
-                    if (isCrouching) {
-                        if (!Physics.Raycast(rb.position, Vector3.up, originalHeight)) {
-                            // Stop crouching
-                            isCrouching = false;
-                            cc.height = originalHeight;
-                            cc.center = originalCenter;
-                            referenceAcceleration = originalAcceleration;
-                        }
+            else
+            {
+                if (isCrouching) {
+                    if (!Physics.Raycast(rb.position, Vector3.up, originalHeight)) {
+                        // Stop crouching
+                        isCrouching = false;
+                        cc.height = originalHeight;
+                        cc.center = originalCenter;
+                        referenceAcceleration = originalAcceleration;
                     }
                 }
-
+            }
+            
+            if (isCrouching)
+            {
+                cc.height = Mathf.Lerp(cc.height, crouchHeight, Time.deltaTime * 5f);
+                currentAcceleration = Mathf.Lerp(currentAcceleration, crouchSpeed, Time.deltaTime * 5f);
+            }
+            else
+            {
+                cc.height = Mathf.Lerp(cc.height, originalHeight, Time.deltaTime * 5f);
+                currentAcceleration = Mathf.Lerp(currentAcceleration, referenceAcceleration, Time.deltaTime * 5f);
+            }
         }
         /// <summary>
         /// Jumping state. Better use it in Update.

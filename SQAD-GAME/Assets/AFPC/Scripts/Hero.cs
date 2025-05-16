@@ -21,11 +21,19 @@ public class Hero : MonoBehaviour {
     public Overview overview;
 
     public bool onStairs = false;
+    
+    [Header("Endurance Rates")]
+    private float wallEnduranceDrain = 1.0f;
+    private float runningEnduranceDrain = 1.4f;
+    private float regularEnduranceDrain = 1.2f;
+    private float wallRunningEnduranceDrain = 1.3f;
 
 
     /* Optional assign the HUD */
-    private void Awake () {
-        if (HUD) {
+    private void Awake()
+    {
+        if (HUD)
+        {
             HUD.hero = this;
         }
     }
@@ -86,23 +94,35 @@ public class Hero : MonoBehaviour {
 
     public void jumpingEnduranceUpdaterInAir()
     {
-        if (!movement.isJumping) return;
+        if (!movement.isJumping || onStairs) return;
 
-        if(movement.onWall)
+
+        if (movement.onWall)
         {
-            movement.endurance-=Time.deltaTime;
-            Debug.Log("onWall endurance");
+            if (movement.isRunning)
+            {
+                movement.endurance -= Time.deltaTime * wallRunningEnduranceDrain;
+                Debug.Log("Wall Running endurance drain: " + wallRunningEnduranceDrain);
+            }
+            else
+            {
+                movement.endurance -= Time.deltaTime * wallEnduranceDrain;
+                Debug.Log("Wall endurance drain: " + wallEnduranceDrain);
+            }
         }
-        else if(movement.isRunning && movement.endurance > movement.endurance-.8f)
+        else if (movement.isRunning)
         {
-            movement.endurance-=Time.deltaTime*1.4f;
-            Debug.Log("Running Jump endurance");
+            movement.endurance -= Time.deltaTime * runningEnduranceDrain;
+            Debug.Log("Air Running endurance drain: " + runningEnduranceDrain);
         }
-        else if(movement.endurance > movement.endurance-.5f)
+        else
         {
-            movement.endurance-=Time.deltaTime*1.2f;
-            Debug.Log("Jumping endurance");
+            movement.endurance -= Time.deltaTime * regularEnduranceDrain;
+            Debug.Log("Regular Jump endurance drain: " + regularEnduranceDrain);
         }
+
+        // Clamp endurance to prevent negative values
+        movement.endurance = Mathf.Clamp(movement.endurance, 0, movement.referenceEndurance);
     }
 
     private void FixedUpdate () {
@@ -135,7 +155,7 @@ public class Hero : MonoBehaviour {
         bool treatAsGrounded = movement.isGrounded || onStairs;
         
         // If running or not grounded (and not on stairs), regenerate endurance slower.
-        float regenRate = (movement.isRunning || !treatAsGrounded) ? Time.deltaTime / 2f : Time.deltaTime / 1.5f;
+        float regenRate = (movement.isRunning || !treatAsGrounded) ? Time.deltaTime / 1.75f : Time.deltaTime / 1.25f;
         movement.endurance = Mathf.MoveTowards(movement.endurance, movement.referenceEndurance, regenRate);
     }
 
