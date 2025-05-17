@@ -912,6 +912,11 @@ MonoBehaviour:
     rb: {fileID: 0}
     cc: {fileID: 0}
     hitTag: 
+    isLedgeHanging: 0
+    ledgeHangingInputValue: 0
+    isLedgeHangingAvailable: 0
+    ledgeHangingSpeed: 1
+    ledgeCheckDistance: 0.5
   slider_Health: {fileID: 1691627825}
   slider_Endurance: {fileID: 207667423}
   errMsgCantJump: {fileID: 1558930975}
@@ -1687,7 +1692,7 @@ PrefabInstance:
     - target: {fileID: 4762762266521425056, guid: de40522614f614981b93e79d5607880a,
         type: 3}
       propertyPath: m_TagString
-      value: climbSurface
+      value: Untagged
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -98,6 +98,15 @@ namespace AFPC {
         public string hitTag = "";
         private int wallJumpTimes = 0;
 
+        [Header("ledge-hanging")]
+        public bool isLedgeHanging = false;
+        public bool ledgeHangingInputValue;
+        public bool isLedgeHangingAvailable = false;
+        public float ledgeHangingSpeed = 1.0f;
+        public float ledgeCheckDistance = 0.5f;
+        GameObject[] ledges;
+
+
         private Hero hero;
 
         /// <summary>
@@ -168,29 +177,42 @@ namespace AFPC {
 
         }
 
-        public virtual void Crouching() 
+        private void ledgeHolding()
+        {
+            if (!isLedgeHangingAvailable) return;
+            if (isLedgeHanging)
+            {
+
+            }
+        }
+
+        public virtual void Crouching()
         {
             if (!isMovementAvailable) return;
-            if(isJumping || isRunning)
+            if (isJumping || isRunning)
             {
                 cc.height = originalHeight;
                 cc.center = originalCenter;
                 referenceAcceleration = originalAcceleration;
                 return;
             }
-            if (crouchInputValue) {
-                    if (!isCrouching) {
-                        // Start crouching
-                        isCrouching = true;
-                        cc.height = crouchHeight;
-                        cc.center = originalCenter * (crouchHeight / originalHeight);
-                        referenceAcceleration = crouchSpeed;
-                    }
+            if (crouchInputValue)
+            {
+                if (!isCrouching)
+                {
+                    // Start crouching
+                    isCrouching = true;
+                    cc.height = crouchHeight;
+                    cc.center = originalCenter * (crouchHeight / originalHeight);
+                    referenceAcceleration = crouchSpeed;
                 }
+            }
             else
             {
-                if (isCrouching) {
-                    if (!Physics.Raycast(rb.position, Vector3.up, originalHeight)) {
+                if (isCrouching)
+                {
+                    if (!Physics.Raycast(rb.position, Vector3.up, originalHeight))
+                    {
                         // Stop crouching
                         isCrouching = false;
                         cc.height = originalHeight;
@@ -199,7 +221,7 @@ namespace AFPC {
                     }
                 }
             }
-            
+
             if (isCrouching)
             {
                 cc.height = Mathf.Lerp(cc.height, crouchHeight, Time.deltaTime * 5f);

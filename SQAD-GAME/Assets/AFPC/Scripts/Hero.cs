@@ -169,7 +169,8 @@ public class Hero : MonoBehaviour {
         overview.Follow (transform.position);
     }
 
-        private void ReadInput() {
+    private void ReadInput()
+    {
         // Cache mouse and movement axis values
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
@@ -185,6 +186,7 @@ public class Hero : MonoBehaviour {
         movement.jumpingInputValue = Input.GetButtonDown("Jump");
         movement.runningInputValue = Input.GetKey(KeyCode.LeftShift);
         movement.crouchInputValue = Input.GetKey(KeyCode.LeftControl);
+        movement.ledgeHangingInputValue = Input.GetKey(KeyCode.E);
     }
     private void DamageFX () {
         if (HUD) HUD.DamageFX();
