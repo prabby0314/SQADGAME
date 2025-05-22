@@ -6,8 +6,7 @@ TagManager:
   tags:
   - stair
   - wallJumpSurface
-  - vaultSurface
-  - HoldEdgeSurface
+  - climbSurface
   layers:
   - Default
   - TransparentFX
